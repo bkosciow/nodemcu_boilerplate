@@ -1,3 +1,5 @@
+#Boilerplate for NodeMCU
+
 - init.lua - run automatically
 - parameters.lua - project configuration (AP login and password)
 - parameters-device.lua - this unit configuration (like node name)

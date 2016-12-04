@@ -1,5 +1,7 @@
 #Boilerplate for NodeMCU
 
+more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.wordpress.com/tag/nodemcu-boilerplate/)
+
 - init.lua - run automatically
 - parameters.lua - project configuration (AP login, password, protocol version)
 - parameters-device.lua - this unit configuration (like node name)

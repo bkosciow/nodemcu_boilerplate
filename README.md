@@ -9,6 +9,8 @@ more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.w
 - main.lua - main code for app
 - network_message.lua = module to decode and validate network packet to JSON message 
 
+#Core
+
 ##init.lua
 This one is simple. Quick check for D1 / GPIO5 state. 
 If it is connected we gonna abort app and if not we start wifi-init.lua. 
@@ -25,6 +27,11 @@ After getting connection we launch main.lua and start keep-alive-timer.
 I had few cases when net was gone and board didn't reconnect until rebooted. After few tries I ended with timer that checks connection and count failures in row. After reaching 10 or more it force unit reboot. Normally board would reconnect automatically before time is out.
 In my case it was ok to reboot the device but keep in mind that may not be in yours.
 Drawback is that we are taking one timer.
+
+##main
+This file is main app start file. In boilerplate we will just turn on buildin led.
+
+# Modules 
 
 ##network_message
 Module to work with JSON messages. For communication between nodes I use JSON messages. Such message looks like this:
@@ -51,7 +58,25 @@ Module gives two functions:
 - prepareMessage() - returns table with set fields *protocol*, *node*, *chip_id*, *event=''*, *response=''*, *targets=['ALL']*
     [Sample](sample/network_message.prepareMessage.main.lua)
 
+##[lcd_hd44870](sample/lcd_hd44870.md)
+Module to utilize char display based on hd44870. 
 
+- Default wiring:
 
-##main
-This file is main app start file. In boilerplate we will just turn on buildin led.
+        lcd_hd44870.pins = {
+            RS= 7,
+            E1= 6,
+            E2= nil,
+            DB4= 5,
+            DB5= 3,
+            DB6= 1,
+            DB7= 2,
+        }
+
+- initialize with default pins and 16x2 size, without cursor:
+
+        lcd = require("lcd_hd44870")
+        lcd.lcd(16, 2)
+        lcd.init()
+
+[Read more](sample/lcd_hd44870.md)

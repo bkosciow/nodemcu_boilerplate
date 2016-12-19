@@ -73,10 +73,29 @@ Module to utilize char display based on hd44870.
             DB7= 2,
         }
 
-- initialize with default pins and 16x2 size, without cursor:
+- use with default pins and 16x2 size, direct
 
         lcd = require("lcd_hd44870")
         lcd.lcd(16, 2)
         lcd.init()
+        lcd.write('Zombicide')
+        lcd.set_xy(0, 1)
+        lcd.write('Black Plague')
+
+- use with default pins and 16x2 size, buffered
+
+        lcd = require("lcd_hd44870")
+        lcd.buffered(16, 2)
+        lcd.init()
+        lcd.set_xy(0, 0)
+        lcd.write("The cat")
+        lcd.set_xy(0, 1)
+        lcd.write("and meows")
+        
+        lcd.flush()
+        lcd.set_xy(10, 0)
+        lcd.write("purrs")
+        
+        lcd.flush()
 
 [Read more](sample/lcd_hd44870.md)

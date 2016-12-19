@@ -1,5 +1,7 @@
+0.4.0
+    - add two modes for lcd_hd44870, direct and buffered
 0.3.0
-	- add module lcd_hd44870
+    - add module lcd_hd44870
 0.2.0
     - add module network_message.lua
     - add sample/network_message.main.lua

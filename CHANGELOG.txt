@@ -1,3 +1,5 @@
+0.4.1
+    - add function sendMessage(socket, message) to network_message. Message is a table with fields
 0.4.0
     - add two modes for lcd_hd44870, direct and buffered
 0.3.0

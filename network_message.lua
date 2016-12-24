@@ -32,5 +32,16 @@ network_message.prepareMessage = function()
 
     return data
 end
+
+network_message.sendMessage = function(socket, message)
+    ok, json = pcall(cjson.encode, message)
+    if ok then
+        print(json)        
+        socket:send(json)  
+        return true 
+    end   
     
+    return false
+end    
+
 return network_message    

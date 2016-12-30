@@ -50,13 +50,15 @@ Module to work with JSON messages. For communication between nodes I use JSON me
 Fields *protocol*, *event* or *response* are required. Server also check if its node name is in *targets* table. If you want to send message to all
 nodes set *targets: ['ALL']*.
 
-Module gives two functions: 
+Module functions: 
 
 - decodeMessage(message) - decode and validate string into message. on fault returns nil
     [Sample](sample/network_message.decodeMessage.main.lua)
 
 - prepareMessage() - returns table with set fields *protocol*, *node*, *chip_id*, *event=''*, *response=''*, *targets=['ALL']*
     [Sample](sample/network_message.prepareMessage.main.lua)
+
+- sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
 ##[lcd_hd44870](sample/lcd_hd44870.md)
 Module to utilize char display based on hd44870. 
@@ -99,3 +101,33 @@ Module to utilize char display based on hd44870.
         lcd.flush()
 
 [Read more](sample/lcd_hd44870.md)
+
+## i2c_scan
+ 
+Scans for I2C devices. Default SDA = D1 and SCL = D2. Usage:
+ 
+        i2cscan = require "i2c_scan"
+        i2cscan.scan()    
+        
+Want to use different pins, set them before scan:
+            
+        i2cscan.pins = {
+            sda = 1,
+            scl = 2
+        }
+        i2cscan.scan()
+        
+Output is similar to this:
+        
+             0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+        00: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+        70: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --    
+        
+        
+           

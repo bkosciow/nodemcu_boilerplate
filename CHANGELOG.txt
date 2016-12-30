@@ -1,3 +1,5 @@
+0.5.0
+    - add i2c_scan module
 0.4.1
     - add function sendMessage(socket, message) to network_message. Message is a table with fields
 0.4.0

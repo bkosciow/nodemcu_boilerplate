@@ -7,22 +7,14 @@ lcd_hd44870.y = 0
 lcd_hd44870.cursor_blink = 0
 lcd_hd44870.cursor_visible = 0
 lcd_hd44870.mode = 'direct'
+lcd_hd44870.drv = nil
 
 lcd_hd44870.lines = {
     0x80, 0xc0, 0x94, 0xd4
 }
-lcd_hd44870.pins = {
-    RS= 7,
-    E1= 6,
-    E2= nil,
-    DB4= 5,
-    DB5= 3,
-    DB6= 1,
-    DB7= 2,
-}
 
-lcd_hd44870.buffered = function(width, height, pins)    
-    lcd_hd44870.lcd(width, height, pins)   
+lcd_hd44870.buffered = function(drv, width, height)    
+    lcd_hd44870.lcd(drv, width, height, pins)   
     lcd_hd44870.mode = 'buffered'
     lcd_hd44870.buffer = {}
     lcd_hd44870.screen = {}   
@@ -36,76 +28,66 @@ lcd_hd44870.buffered = function(width, height, pins)
     end 
 end  
     
-lcd_hd44870.lcd = function(width, height, pins)
+lcd_hd44870.lcd = function(drv, width, height)
     lcd_hd44870.width = width
+    lcd_hd44870.drv = drv
     lcd_hd44870.height = height
     lcd_hd44870.mode = 'direct'
-    if pins ~= nil then
-        lcd_hd44870.pins = pins
-    end
+    
 end
 
 lcd_hd44870.init = function ()
     if lcd_hd44870.width == 0 or lcd_hd44870.height == 0 then
         print("Initialize via lcd(width, height, [pins]) or buffered(..)")
         return
-    end
-    
-    for k,v in pairs(lcd_hd44870.pins) do 
-        gpio.mode(v, gpio.OUTPUT)
-        gpio.write(v, gpio.LOW)
-    end
-
-    lcd_hd44870._init_lcd()
+    end    
+    lcd_hd44870.drv.init()      
+    lcd_hd44870._init_lcd(1)
+    if lcd_hd44870.has_two_e() then lcd_hd44870._init_lcd(2) end 
 end
 
-lcd_hd44870._init_lcd = function()
-    gpio.write(lcd_hd44870.pins['RS'], gpio.LOW)
-    lcd_hd44870._write4(3)
+lcd_hd44870._init_lcd = function(enable)
+    lcd_hd44870.drv.command4(3, enable)
     tmr.delay(50)
-    lcd_hd44870._write4(3)
+    lcd_hd44870.drv.command4(3, enable)
     tmr.delay(50)
-    lcd_hd44870._write4(3)
+    lcd_hd44870.drv.command4(3, enable)
     tmr.delay(50)    
-    lcd_hd44870._write4(2)
+    lcd_hd44870.drv.command4(2, enable)
     
-    lcd_hd44870.command(0x28)
-    lcd_hd44870.command(0x08)
-    lcd_hd44870.command(0x01)
-    lcd_hd44870.command(0x06)
-    lcd_hd44870.command(12 + (2*lcd_hd44870.cursor_visible) + lcd_hd44870.cursor_blink)
+    lcd_hd44870.drv.command(0x28, enable)
+    lcd_hd44870.drv.command(0x08, enable)
+    lcd_hd44870.drv.command(0x01, enable)
+    lcd_hd44870.drv.command(0x06, enable)
+    lcd_hd44870.drv.command(12 + (2*lcd_hd44870.cursor_visible) + lcd_hd44870.cursor_blink, enable)
 end
 
-lcd_hd44870._write4 = function(ch)
-    if bit.isset(ch, 0) then gpio.write(lcd_hd44870.pins['DB4'], gpio.HIGH) else gpio.write(lcd_hd44870.pins['DB4'], gpio.LOW) end        
-    if bit.isset(ch, 1) then gpio.write(lcd_hd44870.pins['DB5'], gpio.HIGH) else gpio.write(lcd_hd44870.pins['DB5'], gpio.LOW) end        
-    if bit.isset(ch, 2) then gpio.write(lcd_hd44870.pins['DB6'], gpio.HIGH) else gpio.write(lcd_hd44870.pins['DB6'], gpio.LOW) end       
-    if bit.isset(ch, 3) then gpio.write(lcd_hd44870.pins['DB7'], gpio.HIGH) else gpio.write(lcd_hd44870.pins['DB7'], gpio.LOW) end
-
-    lcd_hd44870._send()
+lcd_hd44870._get_line_addr = function(line)
+    if line < 2 or lcd_hd44870.has_two_e() == false then
+        return lcd_hd44870.lines[line + 1]
+    else
+        return lcd_hd44870.lines[line - 1]
+    end
 end
 
-lcd_hd44870._write8 = function(ch)
-    lcd_hd44870._write4(bit.rshift(ch, 4))
-    lcd_hd44870._write4(bit.band(ch, 0x0F))
-end
-
-lcd_hd44870.command = function(ch)
-    gpio.write(lcd_hd44870.pins['RS'], gpio.LOW)
-    lcd_hd44870._write8(ch)
+lcd_hd44870._add_x = function(len)
+    lcd_hd44870.x =  lcd_hd44870.x + 1
+    if lcd_hd44870.x >= lcd_hd44870.width then
+        lcd_hd44870.y = lcd_hd44870.y + 1
+        lcd_hd44870.x = 0
+        if lcd_hd44870.y >= lcd_hd44870.height then lcd_hd44870.y = 0 end        
+        lcd_hd44870.drv.command(lcd_hd44870._get_line_addr(lcd_hd44870.y), lcd_hd44870.detect_e())
+    end
 end
 
 lcd_hd44870.write = function(chars)
-    if lcd_hd44870.mode == 'direct' then lcd_hd44870._write_direct(chars) end
-    if lcd_hd44870.mode == 'buffered' then lcd_hd44870._write_buffered(chars) end
-end
-
-lcd_hd44870._write_direct = function(chars)
-    gpio.write(lcd_hd44870.pins['RS'], gpio.HIGH)
-    for i = 1, #chars do
-        lcd_hd44870._write8(chars:byte(i))        
+    if lcd_hd44870.mode == 'direct' then 
+        for i = 1, #chars do
+            lcd_hd44870.drv.write(chars:sub(i,i), lcd_hd44870.detect_e()) 
+            lcd_hd44870._add_x(1)
+        end
     end
-    lcd_hd44870.x =  lcd_hd44870.x + #chars
+    if lcd_hd44870.mode == 'buffered' then lcd_hd44870._write_buffered(chars) end
 end
 
 lcd_hd44870._write_buffered = function(chars)    
@@ -117,7 +99,6 @@ end
 
 lcd_hd44870.flush = function()    
     current_xy = lcd_hd44870.get_xy()
-
     last_x = -1
     last_y = -1
     for y=0, lcd_hd44870.height-1 do              
@@ -128,8 +109,7 @@ lcd_hd44870.flush = function()
                 end
                 last_x = x
                 last_y = y               
-                gpio.write(lcd_hd44870.pins['RS'], gpio.HIGH)                
-                lcd_hd44870._write8(lcd_hd44870.buffer[x][y]:byte(1))
+                lcd_hd44870.drv.write(lcd_hd44870.buffer[x][y]:sub(1,1), lcd_hd44870.detect_e())
                 lcd_hd44870.screen[x][y] = lcd_hd44870.buffer[x][y]
             end
         end
@@ -138,16 +118,10 @@ lcd_hd44870.flush = function()
     lcd_hd44870.set_xy(current_xy['x'], current_xy['y'])
 end
 
-lcd_hd44870._send = function()
-    gpio.write(lcd_hd44870.pins['E1'], gpio.HIGH)
-    tmr.delay(5)
-    gpio.write(lcd_hd44870.pins['E1'], gpio.LOW)
-end
-
-lcd_hd44870.set_xy = function(x, y)
-    lcd_hd44870.command(lcd_hd44870.lines[y + 1] + x)     
+lcd_hd44870.set_xy = function(x, y)    
     lcd_hd44870.x = x
     lcd_hd44870.y = y
+    lcd_hd44870.drv.command(lcd_hd44870._get_line_addr(y) + x, lcd_hd44870.detect_e())         
 end
 
 lcd_hd44870.get_xy = function()
@@ -167,5 +141,17 @@ lcd_hd44870.clear = function()
         end 
     end        
 end 
+
+lcd_hd44870.detect_e = function()
+    if lcd_hd44870.has_two_e() and lcd_hd44870.y > 1 then return 2 else return 1 end    
+end
+
+lcd_hd44870.has_two_e = function()
+    if lcd_hd44870.width >= 40 and lcd_hd44870.height >= 3 then
+        return true
+    else
+        return false
+    end   
+end
 
 return lcd_hd44870

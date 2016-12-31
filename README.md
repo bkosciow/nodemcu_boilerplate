@@ -61,11 +61,11 @@ Module functions:
 - sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
 ##[lcd_hd44870](sample/lcd_hd44870.md)
-Module to utilize char display based on hd44870. 
+Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
-- Default wiring:
+- Default wiring GPIO:
 
-        lcd_hd44870.pins = {
+        drv.pins = {
             RS= 7,
             E1= 6,
             E2= nil,
@@ -75,19 +75,35 @@ Module to utilize char display based on hd44870.
             DB7= 2,
         }
 
+- Default i2c:
+
+        drv.pins = {
+            RS= 4,
+            E1= 5,
+            E2= nil,
+            DB4= 0,
+            DB5= 1,
+            DB6= 2,
+            DB7= 3,
+        }
+
 - use with default pins and 16x2 size, direct
 
         lcd = require("lcd_hd44870")
-        lcd.lcd(16, 2)
+        drv = require("lcd_hd44870_gpio")  <-- GPIO
+        drv = require("lcd_hd44870_i2c")  <-- I2C
+        lcd.lcd(drv, 16, 2)
         lcd.init()
         lcd.write('Zombicide')
         lcd.set_xy(0, 1)
         lcd.write('Black Plague')
 
 - use with default pins and 16x2 size, buffered
-
+        
+        drv = require("lcd_hd44870_gpio")  <-- GPIO
+        drv = require("lcd_hd44870_i2c")  <-- I2C
         lcd = require("lcd_hd44870")
-        lcd.buffered(16, 2)
+        lcd.buffered(drv, 16, 2)
         lcd.init()
         lcd.set_xy(0, 0)
         lcd.write("The cat")
@@ -99,6 +115,7 @@ Module to utilize char display based on hd44870.
         lcd.write("purrs")
         
         lcd.flush()
+
 
 [Read more](sample/lcd_hd44870.md)
 

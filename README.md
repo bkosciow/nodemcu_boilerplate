@@ -89,9 +89,9 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - use with default pins and 16x2 size, direct
 
-        lcd = require("lcd_hd44870")
-        drv = require("lcd_hd44870_gpio")  <-- GPIO
-        drv = require("lcd_hd44870_i2c")  <-- I2C
+        lcd = require("lcd_hd44780")
+        drv = require("lcd_hd44780_gpio")  <-- GPIO
+        drv = require("lcd_hd44780_i2c")  <-- I2C
         lcd.lcd(drv, 16, 2)
         lcd.init()
         lcd.write('Zombicide')
@@ -100,9 +100,9 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - use with default pins and 16x2 size, buffered
         
-        drv = require("lcd_hd44870_gpio")  <-- GPIO
-        drv = require("lcd_hd44870_i2c")  <-- I2C
-        lcd = require("lcd_hd44870")
+        drv = require("lcd_hd44780_gpio")  <-- GPIO
+        drv = require("lcd_hd44780_i2c")  <-- I2C
+        lcd = require("lcd_hd44780")
         lcd.buffered(drv, 16, 2)
         lcd.init()
         lcd.set_xy(0, 0)
@@ -117,7 +117,7 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
         lcd.flush()
 
 
-[Read more](sample/lcd_hd44870.md)
+[Read more](sample/lcd_hd44780.md)
 
 ## i2c_scan
  

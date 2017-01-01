@@ -60,7 +60,7 @@ Module functions:
 
 - sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
-##[lcd_hd44870](sample/lcd_hd44870.md)
+##[lcd_hd44780](sample/lcd_hd44780.md)
 Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - Default wiring GPIO:

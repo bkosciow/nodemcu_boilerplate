@@ -1,7 +1,9 @@
+0.8.0	
+    -  module lcd_hd44780_server with direct support
 0.7.1
-	- fixing typo, hd44870 -> hd44780
+    - fixing typo, hd44870 -> hd44780
 0.7.0
-	- add lcd drivers: gpio & i2c
+    - add lcd drivers: gpio & i2c
 0.5.0
     - add i2c_scan module
 0.4.1

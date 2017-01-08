@@ -119,6 +119,12 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 [Read more](sample/lcd_hd44780.md)
 
+## lcd_hd44780_server module
+
+Start a server that listen to incoming network_message events.
+
+[Read more](sample/lcd_hd44780.md)
+
 ## i2c_scan
  
 Scans for I2C devices. Default SDA = D1 and SCL = D2. Usage:

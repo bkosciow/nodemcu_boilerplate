@@ -1,4 +1,6 @@
-0.8.0	
+0.8.1
+    - added event lcd.content to hd44780 server
+0.8.0
     -  module lcd_hd44780_server with direct support
 0.7.1
     - fixing typo, hd44870 -> hd44780

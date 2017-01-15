@@ -98,6 +98,9 @@ lcd_hd44870._write_buffered = function(chars)
 end
 
 lcd_hd44870.flush = function()    
+    if lcd_hd44870.mode == 'direct' then 
+        print("Wrong mode for flush!")
+    end
     current_xy = lcd_hd44870.get_xy()
     last_x = -1
     last_y = -1

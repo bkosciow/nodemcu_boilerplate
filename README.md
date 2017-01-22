@@ -60,7 +60,25 @@ Module functions:
 
 - sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
-##[lcd_hd44780](sample/lcd_hd44780.md) + handler
+##Event listener (runs handlers)
+Module to handle events. It start its own UDP server, receive packet. Next it transform it into message and
+pass to registered handlers. Each handler reacts on supported events by executing some actions on its worker. 
+
+Handler is a module that understand message and can execute events.
+
+        server_listener = require "server_listener"
+        (...)
+        -- add handlers to listener
+        server_listener.add("lcd", lcd_handler)
+        server_listener.add("thermometer", temp_handler)
+        
+        -- run server
+        server_listener.start(PORT)
+
+
+See handlers and events in modules/workers.
+
+##Worker [lcd_hd44780](sample/lcd_hd44780.md) + handler
 Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - Default wiring GPIO:
@@ -147,7 +165,7 @@ Output is similar to this:
         70: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --    
         
         
-## 18b20 temperature sensor + handler
+##Worker 18b20 temperature sensor + handler
          
          pin = 3 -- 1-wire bus
          temp = require "18b20"

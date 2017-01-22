@@ -60,7 +60,7 @@ Module functions:
 
 - sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
-##[lcd_hd44780](sample/lcd_hd44780.md)
+##[lcd_hd44780](sample/lcd_hd44780.md) + handler
 Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - Default wiring GPIO:
@@ -119,12 +119,6 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 [Read more](sample/lcd_hd44780.md)
 
-## lcd_hd44780_server module
-
-Start a server that listen to incoming network_message events.
-
-[Read more](sample/lcd_hd44780.md)
-
 ## i2c_scan
  
 Scans for I2C devices. Default SDA = D1 and SCL = D2. Usage:
@@ -153,7 +147,7 @@ Output is similar to this:
         70: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --    
         
         
-## 18b20 temperature sensor 
+## 18b20 temperature sensor + handler
          
          pin = 3 -- 1-wire bus
          temp = require "18b20"

@@ -1,6 +1,8 @@
-
+0.9.1
+    - remove lcd_hd44780_server module
+    - add lcd_hd44780_handler
 0.9.0
-    - add 18b20 module and handlr for temperature sensor
+    - add 18b20 module and handler for temperature sensor
 0.8.1
     - add event lcd.content to hd44780 server
 0.8.0

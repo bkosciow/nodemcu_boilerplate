@@ -153,4 +153,10 @@ Output is similar to this:
         70: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --    
         
         
-           
+## 18b20 temperature sensor 
+         
+         pin = 3 -- 1-wire bus
+         temp = require "18b20"
+         print(temp.get_temperature()) 
+         
+[Read more](sample/18b20.md)         

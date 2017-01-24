@@ -1,3 +1,6 @@
+0.10.1
+    - rewrite 18b20 and its handler to proper class
+    - change server_listener to support handler classes
 0.10.0
     - add server_listener to handle handlers
 0.9.1

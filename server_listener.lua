@@ -4,7 +4,7 @@ listener.handlers = {}
 listener.svr = net.createServer(net.UDP)
 
 listener.add = function(name, handler)
-    listener.handlers[name] = handler
+    listener.handlers[name] = handler   
 end
 
 listener.start = function(port)
@@ -12,7 +12,7 @@ listener.start = function(port)
         message = network_message.decodeMessage(message)
         if message ~= nil then
             for name, handler in pairs(listener.handlers) do   
-                handler.handle(socket, message)                    
+                handler:handle(socket, message)                    
             end
         end      
     end)

@@ -1,19 +1,30 @@
-local handler = {}
+local hd44780_handler = {}
+hd44780_handler.__index = hd44780_handler
 
-handler.lcd = nil
+setmetatable(hd44780_handler, {
+    __call = function (cls, ...)
+        return cls.new(...)
+    end,
+})
 
-handler.handle = function(socket, message)   
+function hd44780_handler.new(lcd)
+    local self = setmetatable({}, hd44780_handler)
+    self.lcd = lcd
+    return self
+end   
+
+function hd44780_handler:handle(socket, message)   
     response = false
     if message ~= nil and message.event ~= nil then        
         if message.event == 'lcd.cmd' then
-            handler.lcd.drv.command(
+            self.lcd.drv:command(
                 message.parameters.data,
                 message.parameters.enable + 1
             )
             response = true
         end
         if message.event == 'lcd.char' then
-            handler.lcd.drv.write(
+            self.lcd.drv:write(
                 message.parameters.data,
                 message.parameters.enable + 1
             )
@@ -21,11 +32,11 @@ handler.handle = function(socket, message)
         end
         if message.event == 'lcd.content' then          
             for k,v in pairs(message.parameters.content) do
-                handler.lcd.set_xy(0, k-1)
-                handler.lcd.write(v)
+                self.lcd:set_xy(0, k-1)
+                self.lcd:write(v)
             end
-            if handler.lcd.mode == 'buffered' then
-                handler.lcd.flush()
+            if self.lcd.mode == 'buffered' then
+                self.lcd:flush()
             end
             response = true
         end
@@ -35,4 +46,4 @@ handler.handle = function(socket, message)
 end
 
 
-return handler;
+return hd44780_handler;

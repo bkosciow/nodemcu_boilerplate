@@ -107,32 +107,49 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - use with default pins and 16x2 size, direct
 
-        lcd = require("lcd_hd44780")
-        drv = require("lcd_hd44780_gpio")  <-- GPIO
-        drv = require("lcd_hd44780_i2c")  <-- I2C
-        lcd.lcd(drv, 16, 2)
-        lcd.init()
-        lcd.write('Zombicide')
-        lcd.set_xy(0, 1)
-        lcd.write('Black Plague')
+        hd44780 = require("lcd_hd44780")
+        driver = require("lcd_hd44780_gpio")  <-- GPIO
+        driver = require("lcd_hd44780_i2c")  <-- I2C
+        
+        drv = driver()
+        drv = driver(0x20, 4, 5) <--i2c & default pins
+        
+        pins = {
+            RS= 4,
+            E1= 5,
+            E2= 6,
+            DB4= 0,
+            DB5= 1,
+            DB6= 2,
+            DB7= 3,
+        }
+        drv = driver(0x20, 4, 5, pins) <--i2c & set pins
+        
+        lcd = hd44780(16, 2, drv, 'direct', 1, 1)
+        lcd:init()
+        lcd:write('Zombicide')
+        lcd:set_xy(0, 1)
+        lcd:write('Black Plague')
 
 - use with default pins and 16x2 size, buffered
         
-        drv = require("lcd_hd44780_gpio")  <-- GPIO
-        drv = require("lcd_hd44780_i2c")  <-- I2C
-        lcd = require("lcd_hd44780")
-        lcd.buffered(drv, 16, 2)
-        lcd.init()
-        lcd.set_xy(0, 0)
-        lcd.write("The cat")
-        lcd.set_xy(0, 1)
-        lcd.write("and meows")
+        hd44780 = require("lcd_hd44780")
+        drviver = require("lcd_hd44780_gpio")  <-- GPIO
+        drviver = require("lcd_hd44780_i2c")  <-- I2C
         
-        lcd.flush()
-        lcd.set_xy(10, 0)
-        lcd.write("purrs")
+        drv = i2c_driver(0x20, 4, 5, pins)
+        lcd = hd44780(40, 4, drv, 'buffered', 1, 1)
+        lcd:init()
+        lcd:set_xy(0, 0)
+        lcd:write("The cat")
+        lcd:set_xy(0, 1)
+        lcd:write("and meows")
         
-        lcd.flush()
+        lcd:flush()
+        lcd:set_xy(10, 0)
+        lcd:write("purrs")
+        
+        lcd:flush()
 
 
 [Read more](sample/lcd_hd44780.md)

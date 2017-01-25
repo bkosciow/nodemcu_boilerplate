@@ -1,63 +1,81 @@
 local drv = {}
-drv.port = 0
-drv.addr = nil
-drv.sda = 1
-drv.scl = 2
-drv._rs = 0
-drv._buffer = nil
-drv.pins = {
-    RS= 4,
-    E1= 5,
-    E2= nil,
-    DB4= 0,
-    DB5= 1,
-    DB6= 2,
-    DB7= 3,
-}
+drv.__index = drv
 
-drv.init = function()
-    i2c.setup(drv.port, drv.sda, drv.scl, i2c.SLOW)
-    i2c.address(drv.port, drv.addr, i2c.TRANSMITTER)
+drv.port = 0
+
+setmetatable(drv, {
+    __call = function (cls, ...)
+        return cls.new(...)
+    end,
+})
+
+function drv.new(addr, sda, scl, pins)
+    local self = setmetatable({}, drv)
+    self.addr = addr
+    self.sda = sda
+    self.scl = scl
+    self._rs = 0
+    self._buffer = nil
+    if pins == nil then
+        self.pins = {
+            RS= 4,
+            E1= 5,
+            E2= nil,
+            DB4= 0,
+            DB5= 1,
+            DB6= 2,
+            DB7= 3,
+        }
+    else
+        self.pins = pins
+    end
+    
+    return self
+end 
+
+function drv:init()
+    i2c.setup(drv.port, self.sda, self.scl, i2c.SLOW)
+    i2c.address(self.port, self.addr, i2c.TRANSMITTER)
 end    
 
-drv.command4 = function(ch, enable) 
-    drv._rs = 0
-    drv._write4(ch, enable)
+function drv:command4(ch, enable) 
+    self._rs = 0
+    drv._write4(self, ch, enable) --?
 end
 
-drv.command = function(ch, enable)
-    drv._rs = 0
-    drv._write8(ch, enable)
+function drv:command(ch, enable)
+    self._rs = 0
+    drv._write8(self, ch, enable)
 end
 
-drv._write4 = function(ch, enable)    
-    drv._buffer = 0
-    if bit.isset(ch, 0) then drv._buffer = drv._buffer + math.pow(2, drv.pins['DB4']) end        
-    if bit.isset(ch, 1) then drv._buffer = drv._buffer + math.pow(2, drv.pins['DB5']) end        
-    if bit.isset(ch, 2) then drv._buffer = drv._buffer + math.pow(2, drv.pins['DB6']) end       
-    if bit.isset(ch, 3) then drv._buffer = drv._buffer + math.pow(2, drv.pins['DB7']) end
-    drv._buffer = ch
-    drv._send(enable)
+function drv:_write4(ch, enable)    
+    self._buffer = 0
+    if bit.isset(ch, 0) then self._buffer = self._buffer + math.pow(2, self.pins['DB4']) end        
+    if bit.isset(ch, 1) then self._buffer = self._buffer + math.pow(2, self.pins['DB5']) end        
+    if bit.isset(ch, 2) then self._buffer = self._buffer + math.pow(2, self.pins['DB6']) end       
+    if bit.isset(ch, 3) then self._buffer = self._buffer + math.pow(2, self.pins['DB7']) end
+    self._buffer = ch
+    drv._send(self, enable)
 end
 
-drv._write8 = function(ch, enable) 
-    drv._write4(bit.rshift(ch, 4), enable)
-    drv._write4(bit.band(ch, 0x0F), enable)
+function drv:_write8(ch, enable) 
+    drv._write4(self, bit.rshift(ch, 4), enable)
+    drv._write4(self, bit.band(ch, 0x0F), enable)
 end
 
-drv._send = function(enable)   
+function drv:_send(enable)  
     enable = "E"..enable
-    i2c.start(drv.port)
-    i2c.address(drv.port, drv.addr, i2c.TRANSMITTER)    
-    i2c.write(drv.port, drv._buffer +  math.pow(2, drv.pins[enable]) + drv._rs)
+    i2c.start(self.port)
+    i2c.address(self.port, self.addr, i2c.TRANSMITTER)    
+    i2c.write(self.port, self._buffer +  math.pow(2, self.pins[enable]) + self._rs)
     tmr.delay(5)
-    i2c.write(drv.port, drv._buffer)
-    i2c.stop(drv.port)
+    i2c.write(self.port, self._buffer)
+    i2c.stop(self.port)
 end
 
-drv.write = function(ch, enable)
-    drv._rs =  math.pow(2, drv.pins['RS'])
-    drv._write8(ch:byte(1), enable)        
+function drv:write(ch, enable)
+    self._rs =  math.pow(2, self.pins['RS'])
+    self._write8(self, ch:byte(1), enable)        
 end
 
 return drv

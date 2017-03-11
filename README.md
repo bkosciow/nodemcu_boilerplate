@@ -2,6 +2,8 @@
 
 more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.wordpress.com/tag/nodemcu-boilerplate/)
 
+#Core
+
 - init.lua - run automatically
 - parameters.lua - project configuration (AP login, password, protocol version)
 - parameters-device.lua - this unit configuration (like node name)
@@ -9,11 +11,9 @@ more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.w
 - main.lua - main code for app
 - network_message.lua = module to decode and validate network packet to JSON message 
 
-#Core
-
 ##init.lua
 This one is simple. Quick check for D1 / GPIO5 state. 
-If it is connected we gonna abort app and if not we start wifi-init.lua. 
+If it is connected we will abort app and if not we start wifi-init.lua. 
 
 ##parameters*
 Remove *.dist.* 
@@ -182,10 +182,24 @@ Output is similar to this:
         70: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --    
         
         
-##Worker 18b20 temperature sensor + handler
+## Worker 18b20 temperature sensor + handler
          
          pin = 3 -- 1-wire bus
          temp = require "18b20"
          print(temp.get_temperature()) 
          
-[Read more](sample/18b20.md)         
+[Read more](sample/18b20.md)
+         
+## Worker and handler for relays
+
+Controlls the relays. CHANNELS is a table with gpios that are used to enable relay signals.
+          
+        CHANNELS = {2, 3, 4, 1}
+        relay_handler = require "relay_handler"
+        handler = relay_handler(CHANNELS)
+
+        -- add handlers to listener
+        server_listener.add("relay", handler)
+        
+[Read more](sample/relay.md)        
+          

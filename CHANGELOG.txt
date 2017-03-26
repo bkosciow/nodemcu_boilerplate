@@ -1,3 +1,5 @@
+0.12.0
+    - module and handler for PIR HCS-SR501
 0.11.0
     - add a handler for relays
 0.10.2

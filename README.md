@@ -192,7 +192,7 @@ Output is similar to this:
          
 ## Worker and handler for relays
 
-Controlls the relays. CHANNELS is a table with gpios that are used to enable relay signals.
+Controls the relays. CHANNELS is a table with gpios that are used to enable relay signals.
           
         CHANNELS = {2, 3, 4, 1}
         relay_handler = require "relay_handler"
@@ -202,4 +202,18 @@ Controlls the relays. CHANNELS is a table with gpios that are used to enable rel
         server_listener.add("relay", handler)
         
 [Read more](sample/relay.md)        
+
           
+## Worker and handler for PIR HCS-SR501
+          
+Motion detector
+        
+        pir = require "pir_hcs_sr501"
+        pir_handler = require "pir_hcs_sr501_handler"
+        send_socket = net.createConnection(net.UDP, 0)
+        send_socket:connect(PORT, wifi.sta.getbroadcast())
+        sensor = pir(send_socket, 3)
+        handler = pir_handler(sensor)
+        server_listener.add("pir", handler) 
+
+[Read more](sample/pir_hcssr501.md)  

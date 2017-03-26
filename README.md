@@ -1,8 +1,8 @@
-#Boilerplate for NodeMCU
+# Boilerplate for NodeMCU
 
 more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.wordpress.com/tag/nodemcu-boilerplate/)
 
-#Core
+# Core
 
 - init.lua - run automatically
 - parameters.lua - project configuration (AP login, password, protocol version)
@@ -11,16 +11,16 @@ more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.w
 - main.lua - main code for app
 - network_message.lua = module to decode and validate network packet to JSON message 
 
-##init.lua
+## init.lua
 This one is simple. Quick check for D1 / GPIO5 state. 
 If it is connected we will abort app and if not we start wifi-init.lua. 
 
-##parameters*
+## parameters*
 Remove *.dist.* 
 In parameters.lua keep project variables like access point login, some pin mapping, global names. 
 In parameters-device.lua some configuration that belongs to this node. Like its name or some id
 
-##wifi-init
+## wifi-init
 Idea is simple, check if we are already connected and if not use timer to check status. 
 After getting connection we launch main.lua and start keep-alive-timer.
 
@@ -28,12 +28,12 @@ I had few cases when net was gone and board didn't reconnect until rebooted. Aft
 In my case it was ok to reboot the device but keep in mind that may not be in yours.
 Drawback is that we are taking one timer.
 
-##main
+## main
 This file is main app start file. In boilerplate we will just turn on buildin led.
 
 # Modules 
 
-##network_message
+## network_message
 Module to work with JSON messages. For communication between nodes I use JSON messages. Such message looks like this:
  
     {
@@ -60,7 +60,7 @@ Module functions:
 
 - sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
-##Event listener (runs handlers)
+## Event listener (runs handlers)
 Module to handle events. It start its own UDP server, receive packet. Next it transform it into message and
 pass to registered handlers. Each handler reacts on supported events by executing some actions on its worker. 
 
@@ -78,7 +78,7 @@ Handler is a module that understand message and can execute events.
 
 See handlers and events in modules/workers.
 
-##Worker [lcd_hd44780](sample/lcd_hd44780.md) + handler
+## Worker [lcd_hd44780](sample/lcd_hd44780.md) + handler
 Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
 
 - Default wiring GPIO:

@@ -51,7 +51,7 @@ In ths example sensor is wired to pin G3
         send_socket = net.createConnection(net.UDP, 0)
         send_socket:connect(PORT, wifi.sta.getbroadcast())
         
-        sensor = pir(send_socket, 3) -- 3 is a pin no
+        sensor = pir(send_socket, 2) -- 2 is a pin no
         handler = pir_handler(sensor)
         
         -- add handlers to listener

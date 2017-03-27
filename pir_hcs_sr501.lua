@@ -1,5 +1,9 @@
 local PIRHCSR501 = {}
 PIRHCSR501.__index = PIRHCSR501
+PIRHCSR501.states = {
+    "pir.nomovement",
+    "pir.movement"
+}
 
 setmetatable(PIRHCSR501, {
     __call = function(cls, ...)
@@ -7,43 +11,28 @@ setmetatable(PIRHCSR501, {
     end,
 })
 
-function PIRHCSR501.new(socket, pin, interval)
+function PIRHCSR501.new(socket, pin)
     local self = setmetatable({}, PIRHCSR501)
     self.pin = pin
-    gpio.mode(pin, gpio.INT)
-    self.tmr = tmr.create()
-    self.movement = false
-    if interval == nil then interval = 2000 end
+    gpio.mode(self.pin, gpio.INT)
+    self.movement = gpio.read(self.pin)
+    self.socket = socket
 
-    self.tmr:register(interval, tmr.ALARM_AUTO, function()
-        if not self.movement then
-            self.movement = true
-            message = network_message.prepareMessage()            
-            message.event = "pir.movement"           
-            network_message.sendMessage(socket, message)
-        end
-    end)
-    self.tmr:start()
-    
-    local function alarm(level)        
-        if self.movement then
-            self.movement = false
-            message = network_message.prepareMessage()
-            message.event = "pir.nomovement"
-            network_message.sendMessage(socket, message)
-        end
-        self.tmr:stop()
-        self.tmr:start()
+    local function alarm(level)                    
+        self.movement = level
+        message = network_message.prepareMessage()
+        message.event = PIRHCSR501.states[self.movement + 1]
+        network_message.sendMessage(self.socket, message)     
     end
 
-    gpio.trig(pin, "both", alarm)
-    
+    gpio.trig(self.pin, "both", alarm)
+     
     return self
 end
 
 function PIRHCSR501:get_state()
 
-    return self.movement
+    return PIRHCSR501.states[self.movement + 1]
 end
 
 return PIRHCSR501

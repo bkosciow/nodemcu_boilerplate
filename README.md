@@ -211,8 +211,7 @@ Motion detector
         pir = require "pir_hcs_sr501"
         pir_handler = require "pir_hcs_sr501_handler"
         send_socket = net.createConnection(net.UDP, 0)
-        send_socket:connect(PORT, wifi.sta.getbroadcast())
-        sensor = pir(send_socket, 3)
+        sensor = pir(send_socket, 2)
         handler = pir_handler(sensor)
         server_listener.add("pir", handler) 
 
@@ -223,8 +222,7 @@ Motion detector
         light_sensor = require "light_detector"
         light_sensor_handler = require "light_detector_handle"
         send_socket = net.createConnection(net.UDP, 0)
-        send_socket:connect(PORT, wifi.sta.getbroadcast())
-        light = light_sensor(send_socket, 2, 600)
+        light = light_sensor(send_socket, 4, 1600)
         light_handler = light_sensor_handler(light)
         server_listener.add("light", light_handler)
         

@@ -15,12 +15,13 @@ function light_detector.new(socket, pin, interval)
     self.pin = pin
     self.tmr = tmr.create()
     self.last_state = nil
-    self.current_state = nil
-    gpio.mode(pin, gpio.INT)
-    if interval == nil then interval = 500 end
+    self.current_state = 0
+    self.socket = socket
+    gpio.mode(self.pin, gpio.INPUT)
+    if interval == nil then interval = 1000 end
 
     self.tmr:register(interval, tmr.ALARM_AUTO, function()
-        self.current_state = gpio.read(pin)
+        self.current_state = gpio.read(self.pin)
         if self.last_state ~= self.current_state then
             self.last_state = self.current_state           
             message = network_message.prepareMessage()            
@@ -28,9 +29,8 @@ function light_detector.new(socket, pin, interval)
             network_message.sendMessage(socket, message)
         end
     end)
-    self.tmr:start()
+    self.tmr:start()    
     
-    return self
 end    
 
 function light_detector:get_state()

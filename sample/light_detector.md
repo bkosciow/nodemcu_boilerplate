@@ -49,9 +49,8 @@ In ths example sensor is wired to pin G2
         light_sensor_handler = require "light_detector_handle"
         
         send_socket = net.createConnection(net.UDP, 0)
-        send_socket:connect(PORT, wifi.sta.getbroadcast())
         
-        light = light_sensor(send_socket, 2, 600)
+        light = light_sensor(send_socket, 4, 600)
         light_handler = light_sensor_handler(light)
         
         -- add handlers to listener

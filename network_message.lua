@@ -37,7 +37,7 @@ network_message.sendMessage = function(socket, message)
     ok, json = pcall(cjson.encode, message)
     if ok then
         print(json)        
-        socket:send(json)  
+        socket:send(PORT, wifi.sta.getbroadcast(), json)  
         return true 
     end   
     

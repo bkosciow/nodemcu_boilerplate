@@ -14,7 +14,7 @@ function Temp18b20_handler.new(node, round)
     return self
 end    
 
-function Temp18b20_handler:handle(socket, message)
+function Temp18b20_handler:handle(socket, message, port, ip)
     response = false
     if message ~= nil and message.event ~= nil then
         if message.event == 'temperature.current' then
@@ -24,7 +24,7 @@ function Temp18b20_handler:handle(socket, message)
             end
             message = network_message.prepareMessage()
             message.response = self.node:get_temperature(r)
-            network_message.sendMessage(socket, message)
+            network_message.sendMessage(socket, message, port, ip)
             response = true
         end 
     end

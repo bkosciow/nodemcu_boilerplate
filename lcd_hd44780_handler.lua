@@ -13,7 +13,7 @@ function hd44780_handler.new(lcd)
     return self
 end   
 
-function hd44780_handler:handle(socket, message)   
+function hd44780_handler:handle(socket, message, port, ip)
     response = false
     if message ~= nil and message.event ~= nil then        
         if message.event == 'lcd.cmd' then

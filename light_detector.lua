@@ -30,7 +30,8 @@ function light_detector.new(socket, pin, interval)
         end
     end)
     self.tmr:start()    
-    
+
+    return self
 end    
 
 function light_detector:get_state()

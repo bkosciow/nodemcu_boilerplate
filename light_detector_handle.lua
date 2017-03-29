@@ -17,7 +17,7 @@ end
 function light_detector_handler:handle(socket, message)
     response = false
     if message ~= nil and message.event ~= nil then
-        if message.event == 'state' then
+        if message.event == 'light.state' then
             message = network_message.prepareMessage()
             message.response = self.node:get_state()
             network_message.sendMessage(socket, message)

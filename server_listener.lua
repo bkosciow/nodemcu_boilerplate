@@ -8,11 +8,11 @@ listener.add = function(name, handler)
 end
 
 listener.start = function(port)
-    listener.svr:on('receive', function(socket, message) 
+    listener.svr:on('receive', function(socket, message, port, ip) 
         message = network_message.decodeMessage(message)
         if message ~= nil then
             for name, handler in pairs(listener.handlers) do   
-                handler:handle(socket, message)                    
+                handler:handle(socket, message, port, ip)                    
             end
         end      
     end)

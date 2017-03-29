@@ -33,11 +33,13 @@ network_message.prepareMessage = function()
     return data
 end
 
-network_message.sendMessage = function(socket, message)
-    ok, json = pcall(cjson.encode, message)
+network_message.sendMessage = function(socket, message, port, ip)
+    ok, json = pcall(cjson.encode, message)    
     if ok then
         print(json)        
-        socket:send(PORT, wifi.sta.getbroadcast(), json)  
+        if port == nil then port = PORT end
+        if ip == nil then ip =  wifi.sta.getbroadcast() end        
+        socket:send(port, ip, json)  
         return true 
     end   
     

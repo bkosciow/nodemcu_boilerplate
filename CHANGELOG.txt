@@ -1,3 +1,6 @@
+0.13.1
+    - fix UDP socket
+    - refactor handlers
 0.13.0
     - module for light detector @ lm393
 0.12.0

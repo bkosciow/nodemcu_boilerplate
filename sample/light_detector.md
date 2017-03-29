@@ -1,7 +1,7 @@
-# PIR HCS SR 501
+# Light detector
 
-Module and handler for motion detector. Broadcasts two events: **pir.movement** and **pir.nomovement**.
-Response to event **pir.move**
+Module and handler for a light detector. Broadcasts two events: **detect.light** and **detect.dark**.
+Response to event **state**
 
 ## Sample message:
 
@@ -10,7 +10,7 @@ Response to event **pir.move**
         "protocol":"iot:1",
         "node":"node-kitchen",
         "targets":["ALL"],
-        "event":"pir.movement",
+        "event":"detect.light",
         "response":""
     }
 
@@ -20,7 +20,7 @@ Response to event **pir.move**
         'protocol': 'iot:1',
         'node': 'computer',
         'chip_id': 'd45656b45afb58b1f0a46',
-        'event': 'pir.move',
+        'event': 'state',
         'targets': [
             'ALL'
         ]
@@ -34,27 +34,27 @@ Response:
         "node":"node-kitchen",
         "targets":["ALL"],
         "event":"",
-        "response":false
+        "response":"detect.dark"
     }
 
 
 ## Sample code
 
-In ths example sensor is wired to pin G3
+In ths example sensor is wired to pin G2
 
         network_message = require "network_message"
         server_listener = require "server_listener"
         
-        pir = require "pir_hcs_sr501"
-        pir_handler = require "pir_hcs_sr501_handler"
+        light_sensor = require "light_detector"
+        light_sensor_handler = require "light_detector_handle"
         
         send_socket = net.createConnection(net.UDP, 0)
         
-        sensor = pir(send_socket, 2) -- 2 is a pin no
-        handler = pir_handler(sensor)
+        light = light_sensor(send_socket, 4, 600)
+        light_handler = light_sensor_handler(light)
         
         -- add handlers to listener
-        server_listener.add("pir", handler)
+        server_listener.add("light", light_handler)
 
         -- run server
         server_listener.start(PORT)

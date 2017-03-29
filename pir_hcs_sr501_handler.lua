@@ -14,13 +14,13 @@ function pir_hcs_sr501_handler.new(node)
     return self
 end   
 
-function pir_hcs_sr501_handler:handle(socket, message)
+function pir_hcs_sr501_handler:handle(socket, message, port, ip)
     response = false
     if message ~= nil and message.event ~= nil then
         if message.event == 'pir.move' then
             message = network_message.prepareMessage()
             message.response = self.node:get_state()
-            network_message.sendMessage(socket, message)
+            network_message.sendMessage(socket, message, port, ip)
             response = true
 
         end

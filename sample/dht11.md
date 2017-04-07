@@ -4,6 +4,15 @@ Responds for event **dht.readings** with humidity and temperature.
 
 May broadcast **dht.status** if socket is set.
 
+## worker
+
+dht11(5, send_socket, cb, 15000) 
+
+- 5 = pin
+- send_socket, can be nil
+- cb - callback can be nil
+- 15000 broadcast interval, if nil = 1 minute
+
 ## Sample message broadcasted periodically 
 
     {
@@ -62,4 +71,13 @@ Response:
     
     server_listener.add("dht", dht_handler)
     server_listener.start(PORT)
+
+Callbacks
+
+    cb = function(event, par)
+        print("event :"..event)
+        print(par)
+    end
     
+    mydht = dht11(5, send_socket, cb, 5000)
+    dht_handler = dht11_handler(mydht, cb)

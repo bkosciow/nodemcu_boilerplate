@@ -42,19 +42,34 @@ Response:
 
 In ths example sensor is wired to pin G3
 
-        network_message = require "network_message"
-        server_listener = require "server_listener"
-        
-        pir = require "pir_hcs_sr501"
-        pir_handler = require "pir_hcs_sr501_handler"
-        
-        send_socket = net.createConnection(net.UDP, 0)
-        
-        sensor = pir(send_socket, 2) -- 2 is a pin no
-        handler = pir_handler(sensor)
-        
-        -- add handlers to listener
-        server_listener.add("pir", handler)
+    network_message = require "network_message"
+    server_listener = require "server_listener"
+    
+    pir = require "pir_hcs_sr501"
+    pir_handler = require "pir_hcs_sr501_handler"
+    
+    send_socket = net.createConnection(net.UDP, 0)
+    
+    sensor = pir(send_socket, 2) -- 2 is a pin no
+    handler = pir_handler(sensor)
+    
+    -- add handlers to listener
+    server_listener.add("pir", handler)
 
-        -- run server
-        server_listener.start(PORT)
+    -- run server
+    server_listener.start(PORT)
+        
+Can pass callback as last parameter to worker and handler: 
+        
+    cb = function(event)
+        print("event :"..event)
+    end
+     
+    sensor = pir(send_socket, 2, cb)
+    handler = pir_handler(sensor, cb)        
+    
+If **send_socket** is **nil** there is no broadcast. In this case only callback is executed:   
+  
+    sensor = pir(nil, 2, cb) 
+    
+    

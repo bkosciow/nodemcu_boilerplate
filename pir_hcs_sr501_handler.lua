@@ -7,10 +7,10 @@ setmetatable(pir_hcs_sr501_handler, {
     end,
 })
 
-function pir_hcs_sr501_handler.new(node)
+function pir_hcs_sr501_handler.new(node, callback)
     local self = setmetatable({}, pir_hcs_sr501_handler)
     self.node = node
-   
+    self.callback = callback
     return self
 end   
 
@@ -21,8 +21,10 @@ function pir_hcs_sr501_handler:handle(socket, message, port, ip)
             message = network_message.prepareMessage()
             message.response = self.node:get_state()
             network_message.sendMessage(socket, message, port, ip)
+            if self.callback ~= nil then
+                self.callback(self.node:get_state())
+            end
             response = true
-
         end
     end
 

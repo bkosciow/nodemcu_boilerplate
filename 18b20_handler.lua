@@ -7,10 +7,11 @@ setmetatable(Temp18b20_handler, {
     end,
 })
 
-function Temp18b20_handler.new(node, round)
+function Temp18b20_handler.new(node, round, callback)
     local self = setmetatable({}, Temp18b20_handler)
     self.node = node
     self.round = round
+    self.callback = callback
     return self
 end    
 
@@ -21,11 +22,14 @@ function Temp18b20_handler:handle(socket, message, port, ip)
             r = self.round
             if type(message['parameters']) == 'table' and type(message.parameters['round'] ~= nil)then
                 r = message.parameters['round'] 
-            end
+            end            
             message = network_message.prepareMessage()
             message.response = self.node:get_temperature(r)
             network_message.sendMessage(socket, message, port, ip)
             response = true
+            if self.callback ~= nil then
+                self.callback(self.node:get_temperature(r))
+            end
         end 
     end
 

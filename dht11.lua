@@ -7,21 +7,27 @@ setmetatable(mydht, {
     end,
 })
 
-function mydht.new(pin, socket, interval)
+function mydht.new(pin, socket, callback, interval)
     local self = setmetatable({}, mydht)
     self.pin = pin
     self.socket = socket
+    self.callback = callback
     if interval == nil then interval = 1000*60 end
 
     if self.socket ~= nil then
         self.tmr = tmr.create()
         self.tmr:register(interval, tmr.ALARM_AUTO, function()
             local readings = mydht.get_readings(self)
-            if readings['temp'] ~= nil then        
-                message = network_message.prepareMessage()            
-                message.event = "dht.status"
-                message.parameters = readings          
-                network_message.sendMessage(socket, message)
+            if readings['temp'] ~= nil then   
+                if self.socket ~= nil then     
+                    message = network_message.prepareMessage()            
+                    message.event = "dht.status"
+                    message.parameters = readings          
+                    network_message.sendMessage(socket, message)
+                end
+                if self.callback ~= nil then
+                    self.callback("dht.status", readings)
+                end
             end
         end)
         self.tmr:start()    

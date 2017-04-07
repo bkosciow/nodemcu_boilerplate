@@ -7,10 +7,10 @@ setmetatable(light_detector_handler, {
     end,
 })
 
-function light_detector_handler.new(node)
+function light_detector_handler.new(node, callback)
     local self = setmetatable({}, light_detector_handler)
     self.node = node
-   
+    self.callback = callback
     return self
 end   
 
@@ -21,6 +21,9 @@ function light_detector_handler:handle(socket, message)
             message = network_message.prepareMessage()
             message.response = self.node:get_state()
             network_message.sendMessage(socket, message)
+            if self.callback ~= nil then
+                self.callback('light.state', self.node:get_state())
+            end
             response = true
 
         end

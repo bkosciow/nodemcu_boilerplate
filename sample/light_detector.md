@@ -3,6 +3,15 @@
 Module and handler for a light detector. Broadcasts two events: **detect.light** and **detect.dark**.
 Response to event **state**
 
+## worker
+
+light = light_sensor(send_socket, 6, cb, 5000) - send_socket can be nil, 6 is a pin,  cb can be nil, 5000 (interval) can be omnited - default 1s,
+
+## handler
+
+light_sensor_handler(light, cb) - light required, cb can be null
+
+
 ## Sample message:
 
     {
@@ -40,7 +49,7 @@ Response:
 
 ## Sample code
 
-In ths example sensor is wired to pin G2
+In ths example sensor is wired to pin G2, no callback given, inteval 6s
 
         network_message = require "network_message"
         server_listener = require "server_listener"
@@ -50,7 +59,7 @@ In ths example sensor is wired to pin G2
         
         send_socket = net.createConnection(net.UDP, 0)
         
-        light = light_sensor(send_socket, 4, 600)
+        light = light_sensor(send_socket, 4, nil, 6000)
         light_handler = light_sensor_handler(light)
         
         -- add handlers to listener
@@ -58,3 +67,20 @@ In ths example sensor is wired to pin G2
 
         -- run server
         server_listener.start(PORT)
+
+
+Worker callback:
+
+        cb = function(event)
+            print("event :"..event)
+        end
+        light = light_sensor(send_socket, 6, cb, 5000)
+
+Handler callback:
+        
+        cb = function(event, par)
+            print("event :"..event)
+            print(par)
+        end
+        
+        light_handler = light_sensor_handler(light, cb)

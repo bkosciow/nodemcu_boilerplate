@@ -1,26 +1,53 @@
 print ("core ready")
 
 network_message = require "network_message"
-server_listener = require "server_listener"
 
-send_socket = net.createConnection(net.UDP, 0)
+--i2c_driver = require("lcd_hd44780_i2c")
+gpio_driver = require "lcd_hd44780_gpio"
+hd44780 = require("lcd_hd44780")
+--server_listener = require "server_listener"
+--hd44780_handler = require "lcd_hd44780_handler"
 
-dht11 = require "dht11"
-dht11_handler = require "dht11_handler"
-mydht = dht11(5, send_socket, 5000)
-dht_handler = dht11_handler(mydht)
 
-pir = require "pir_hcs_sr501"
-pir_handler = require "pir_hcs_sr501_handler"
-motion = pir(send_socket, 2)
-motion_handler = pir_handler(motion)
+--setup LCD
+--pins = {
+--    RS= 4,
+--    E1= 5,
+--    E2= 6,
+--    DB4= 0,
+--    DB5= 1,
+--    DB6= 2,
+--    DB7= 3,
+--}
 
-light_sensor = require "light_detector"
-light_sensor_handler = require "light_detector_handle"
-light = light_sensor(send_socket, 6, 2000)
-light_handler = light_sensor_handler(light)
+--drv = i2c_driver(0x20, 4, 5, pins)
+drv = gpio_driver()
+lcd = hd44780(16, 2, drv, 'buffered', 0, 0)
+lcd:init()
 
-server_listener.add("dht", dht_handler)
-server_listener.add("motion", motion_handler)
-server_listener.add("light", light_handler)
-server_listener.start(PORT)
+--lcd:write('Zombicide!')
+--lcd:flush()
+
+--lcd.init()
+lcd:set_xy(0, 0)
+lcd:write("the cat")
+lcd:set_xy(0, 1)
+lcd:write("and meows")
+
+lcd:flush()
+lcd:set_xy(10, 0)
+lcd:write("purrs")
+
+lcd:flush()
+
+
+--attach lcd to handler
+--lcd_handler = hd44780_handler(lcd)
+
+-- add handlers to listener
+--server_listener.add("lcd", lcd_handler)
+
+print("ok")
+
+-- run server
+--server_listener.start(PORT)

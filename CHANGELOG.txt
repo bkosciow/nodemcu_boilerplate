@@ -1,3 +1,6 @@
+0.15.1
+    - remove print from sound
+    - add callbacks
 0.15.0
     - add sound detector worker
 0.14.0

@@ -25,8 +25,7 @@ function sound_sensor.new(socket, pin, callback)
 
     local function alarm(level)           
         if (level == 1 and self.hold == false) then
-            self.hold = true   
-            print("PING "..level)
+            self.hold = true               
             if (self.socket ~= nil) then
                 message = network_message.prepareMessage()
                 message.event = sound_sensor.states[1]

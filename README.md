@@ -237,4 +237,23 @@ Motion detector
         server_listener.add("dht", dht_handler)
         
 [Read more](sample/dht11.md)
+
+## Worker for sound detector
+        
+        sd = require "sound_detector"
+        gpio.mode(3, gpio.OUTPUT, gpio.PULLUP)
+        gpio.write(3, gpio.HIGH)
+        local bum = false
+        
+        sound_detector = sd(send_socket, 1, function(event)
+            if bum then
+                gpio.write(3, gpio.HIGH)
+            else
+                gpio.write(3, gpio.LOW)                
+            end
+            bum = not bum
+        end) 
+        
+[Read more](sample/sound_detector.md)
+        
         

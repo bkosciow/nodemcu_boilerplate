@@ -1,7 +1,8 @@
 # Relay
 
 Handler for any relay with any number of channels.
-It requires only GPIO numbers that control it (in for of a table)
+It requires only GPIO numbers that control it (in form of a table)
+Last parameter is a callback
 
 ## Set channel state
 
@@ -68,3 +69,9 @@ Response:
     -- run server
     server_listener.start(PORT)
     
+## With callback
+    
+    cb = function(event, channel_or_channels)
+        print("event :"..event)
+    end
+    r_handler = relay_handler({3}, cb) 

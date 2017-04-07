@@ -20,7 +20,7 @@ function relay_handler:init()
     end
 end
 
-function relay_handler:handle(socket, message, port, ip)
+function relay_handler:handle(socket, message)   
     response = false
     if message ~= nil and message.event ~= nil and type(message['parameters']) == 'table' and message.parameters.channel ~= nil then
         channel = self.channels[message.parameters.channel + 1]
@@ -39,7 +39,7 @@ function relay_handler:handle(socket, message, port, ip)
                 states[k] = gpio.read(v) == 0 and 1 or 0
             end    
             message.response = states
-            network_message.sendMessage(socket, message, port, ip)
+            network_message.sendMessage(socket, message)
             response = true
         end
     end           

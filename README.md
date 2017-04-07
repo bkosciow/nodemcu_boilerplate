@@ -1,8 +1,7 @@
-# Node One v1
+# Boilerplate for NodeMCU
 
-more on []()
+more on [https://koscis.wordpress.com/tag/nodemcu-boilerplate/](https://koscis.wordpress.com/tag/nodemcu-boilerplate/)
 
-<<<<<<< HEAD
 # Core
 
 - init.lua - run automatically
@@ -258,5 +257,3 @@ Motion detector
 [Read more](sample/sound_detector.md)
         
         
-=======
->>>>>>> github/master

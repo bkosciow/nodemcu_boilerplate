@@ -217,12 +217,12 @@ Motion detector
 
 [Read more](sample/pir_hcssr501.md)  
 
-## Worker and handler for light detector
+## Worker and handler for light detector, without callback
 
         light_sensor = require "light_detector"
         light_sensor_handler = require "light_detector_handle"
         send_socket = net.createConnection(net.UDP, 0)
-        light = light_sensor(send_socket, 4, 1600)
+        light = light_sensor(send_socket, 4, nil, 1600)
         light_handler = light_sensor_handler(light)
         server_listener.add("light", light_handler)
         

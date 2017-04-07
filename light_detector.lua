@@ -10,23 +10,29 @@ setmetatable(light_detector, {
     end,
 })
 
-function light_detector.new(socket, pin, interval)
+function light_detector.new(socket, pin, callback, interval)
     local self = setmetatable({}, light_detector)
     self.pin = pin
     self.tmr = tmr.create()
     self.last_state = nil
     self.current_state = 0
     self.socket = socket
+    self.callback = callback
     gpio.mode(self.pin, gpio.INPUT)
     if interval == nil then interval = 1000 end
 
     self.tmr:register(interval, tmr.ALARM_AUTO, function()
         self.current_state = gpio.read(self.pin)
         if self.last_state ~= self.current_state then
-            self.last_state = self.current_state           
-            message = network_message.prepareMessage()            
-            message.event = light_detector.states[self.current_state + 1]           
-            network_message.sendMessage(socket, message)
+            self.last_state = self.current_state       
+            if self.socket ~= nil then    
+                message = network_message.prepareMessage()            
+                message.event = light_detector.states[self.current_state + 1]           
+                network_message.sendMessage(socket, message)
+            end
+            if self.callback ~= nil then
+                self.callback(light_detector.states[self.current_state + 1])
+            end
         end
     end)
     self.tmr:start()    

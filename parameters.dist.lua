@@ -1,5 +1,7 @@
-NET_AP = "---"
-NET_PASSWORD = "---"
+_WIFI_APS = {   
+    {["bubus"]="whoknowsme"},
+    {["bubus1"]="whoknowsme1"},
+}
 PROTOCOL = "iot:1"
 PORT = 5053
 CHANNELS = {2, 3, 4, 1}

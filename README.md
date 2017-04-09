@@ -17,16 +17,15 @@ If it is connected we will abort app and if not we start wifi-init.lua.
 
 ## parameters*
 Remove *.dist.* 
-In parameters.lua keep project variables like access point login, some pin mapping, global names. 
+In parameters.lua keep project variables like access points login, some pin mapping, global names. 
 In parameters-device.lua some configuration that belongs to this node. Like its name or some id
 
 ## wifi-init
-Idea is simple, check if we are already connected and if not use timer to check status. 
+Idea is simple, check if we are already connected and if not we iterate over APs and we use timer to check status. 
 After getting connection we launch main.lua and start keep-alive-timer.
 
 I had few cases when net was gone and board didn't reconnect until rebooted. After few tries I ended with timer that checks connection and count failures in row. After reaching 10 or more it force unit reboot. Normally board would reconnect automatically before time is out.
 In my case it was ok to reboot the device but keep in mind that may not be in yours.
-Drawback is that we are taking one timer.
 
 ## main
 This file is main app start file. In boilerplate we will just turn on buildin led.

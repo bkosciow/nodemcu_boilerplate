@@ -7,9 +7,10 @@ setmetatable(relay_handler, {
     end,
 })
 
-function relay_handler.new(channels)
+function relay_handler.new(channels, callback)
     local self = setmetatable({}, relay_handler)
     self.channels = channels
+    self.callback = callback
     relay_handler.init(self)
     return self
 end    
@@ -27,10 +28,16 @@ function relay_handler:handle(socket, message)
         if message.event == 'channel.on' and channel ~= nil then
             gpio.write(channel, gpio.LOW)
             response = true
+            if self.callback ~= nil then
+                self.callback('channel.on', channel) 
+            end
         end
         if message.event == 'channel.off' and channel ~= nil then
             gpio.write(channel, gpio.HIGH)
             response = true
+            if self.callback ~= nil then
+                self.callback('channel.off', channel) 
+            end
         end
         if message.event == 'channel.states' then
             message = network_message.prepareMessage()
@@ -40,6 +47,9 @@ function relay_handler:handle(socket, message)
             end    
             message.response = states
             network_message.sendMessage(socket, message)
+            if self.callback ~= nil then
+                self.callback('channel.states', states) 
+            end
             response = true
         end
     end           

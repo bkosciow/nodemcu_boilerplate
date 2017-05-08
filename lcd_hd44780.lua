@@ -126,7 +126,7 @@ end
 function lcd_hd44780:set_xy(x, y)    
     self.x = x
     self.y = y
-    self.drv:command(lcd_hd44780._get_line_addr(self, y) + x, lcd_hd44780.detect_e(self))         
+    self.drv:command(lcd_hd44780._get_line_addr(self, y) + x, lcd_hd44780.detect_e(self))
 end
 
 function lcd_hd44780:get_xy()
@@ -144,7 +144,11 @@ function lcd_hd44780:clear()
                 self.buffer[x][y] = " "
             end
         end 
-    end        
+    else
+		drv:command(0x01, lcd_hd44780.detect_e(self))
+		self.x = 0
+		self.y = 0
+	end
 end 
 
 function lcd_hd44780:detect_e()

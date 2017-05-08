@@ -136,7 +136,7 @@ function lcd_hd44780:get_xy()
     }   
 end
 
-function lcd_hd44780:clear() 
+function lcd_hd44780:clear()
     if self.mode == 'buffered' then
         for x=0, self.width-1 do
             self.buffer[x] = {}
@@ -161,6 +161,17 @@ function lcd_hd44780:has_two_e()
     else
         return false
     end   
+end
+
+function lcd_hd44780:setCustomChar(position, pattern)
+	drv:command(bit.bor(0x40, bit.lshift(position, 3)), lcd_hd44780.detect_e(self))
+
+	for key,value in pairs(pattern) do
+		drv:command(pattern[key], lcd_hd44780.detect_e(self), true)
+	end
+	
+	drv:command(0x00, lcd_hd44780.detect_e(self), true)
+	lcd_hd44780.clear(self)
 end
 
 return lcd_hd44780

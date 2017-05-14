@@ -167,7 +167,7 @@ function lcd_hd44780:setCustomChar(position, pattern)
 	drv:command(bit.bor(0x40, bit.lshift(position, 3)), lcd_hd44780.detect_e(self))
 
 	for key,value in pairs(pattern) do
-		drv:command(pattern[key], lcd_hd44780.detect_e(self), true)
+		drv:write(pattern[key], lcd_hd44780.detect_e(self))
 	end
 	
 	drv:command(0x00, lcd_hd44780.detect_e(self), true)

@@ -43,8 +43,8 @@ function drv:command4(ch, enable)
     drv._write4(self, ch, enable) --?
 end
 
-function drv:command(ch, enable, charMode)
-    if (charMode) then self._rs = 1 else self._rs = 0 end
+function drv:command(ch, enable)
+    self._rs = 0
     drv._write8(self, ch, enable)
 end
 

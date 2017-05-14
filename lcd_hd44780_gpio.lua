@@ -38,8 +38,8 @@ function drv:command4(ch, enable)
     drv._write4(self, ch, enable)
 end
 
-function drv:command(ch, enable, charMode)
-    if (charMode) then gpio.write(self.pins['RS'], gpio.HIGH) else gpio.write(self.pins['RS'], gpio.LOW) end
+function drv:command(ch, enable)
+    gpio.write(self.pins['RS'], gpio.LOW)
     drv._write8(self, ch, enable)
 end
 

@@ -126,7 +126,7 @@ end
 function lcd_hd44780:set_xy(x, y)    
     self.x = x
     self.y = y
-    self.drv:command(lcd_hd44780._get_line_addr(self, y) + x, lcd_hd44780.detect_e(self))         
+    self.drv:command(lcd_hd44780._get_line_addr(self, y) + x, lcd_hd44780.detect_e(self))
 end
 
 function lcd_hd44780:get_xy()
@@ -136,7 +136,7 @@ function lcd_hd44780:get_xy()
     }   
 end
 
-function lcd_hd44780:clear() 
+function lcd_hd44780:clear()
     if self.mode == 'buffered' then
         for x=0, self.width-1 do
             self.buffer[x] = {}
@@ -144,7 +144,11 @@ function lcd_hd44780:clear()
                 self.buffer[x][y] = " "
             end
         end 
-    end        
+    else
+		drv:command(0x01, lcd_hd44780.detect_e(self))
+		self.x = 0
+		self.y = 0
+	end
 end 
 
 function lcd_hd44780:detect_e()
@@ -157,6 +161,19 @@ function lcd_hd44780:has_two_e()
     else
         return false
     end   
+end
+
+function lcd_hd44780:setCustomChar(position, pattern)
+	drv:command(bit.bor(0x40, bit.lshift(position, 3)), lcd_hd44780.detect_e(self))
+
+	gpio.write(drv.pins['RS'], gpio.HIGH)
+
+	for key,value in pairs(pattern) do
+		drv:_write8(pattern[key], lcd_hd44780.detect_e(self))
+	end
+	
+	drv:command(0x00, lcd_hd44780.detect_e(self), true)
+	lcd_hd44780.clear(self)
 end
 
 return lcd_hd44780

@@ -66,7 +66,7 @@ end
 
 function drv:write(ch, enable)
     gpio.write(self.pins['RS'], gpio.HIGH)
-    drv._write8(self, ch:byte(i), enable)        
+    drv._write8(self, ch:byte(1), enable)        
 end
 
 return drv

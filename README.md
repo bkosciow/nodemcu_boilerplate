@@ -130,7 +130,7 @@ Module to utilize char display based on hd44870. Works with 16x1 up to 40x4
         lcd:set_xy(0, 1)
         lcd:write('Black Plague')
 
-- use with default pins and 16x2 size, buffered
+- use with default pins and 40x4 size, buffered
         
         hd44780 = require("lcd_hd44780")
         drviver = require("lcd_hd44780_gpio")  <-- GPIO

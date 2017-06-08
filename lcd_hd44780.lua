@@ -145,10 +145,10 @@ function lcd_hd44780:clear()
             end
         end 
     else
-		drv:command(0x01, lcd_hd44780.detect_e(self))
-		self.x = 0
-		self.y = 0
-	end
+        drv:command(0x01, lcd_hd44780.detect_e(self))
+        self.x = 0
+        self.y = 0
+    end
 end 
 
 function lcd_hd44780:detect_e()
@@ -164,16 +164,16 @@ function lcd_hd44780:has_two_e()
 end
 
 function lcd_hd44780:setCustomChar(position, pattern)
-	drv:command(bit.bor(0x40, bit.lshift(position, 3)), lcd_hd44780.detect_e(self))
+    drv:command(bit.bor(0x40, bit.lshift(position, 3)), lcd_hd44780.detect_e(self))
 
-	gpio.write(drv.pins['RS'], gpio.HIGH)
+    drv:setrs(true)
 
-	for key,value in pairs(pattern) do
-		drv:_write8(pattern[key], lcd_hd44780.detect_e(self))
-	end
-	
-	drv:command(0x00, lcd_hd44780.detect_e(self), true)
-	lcd_hd44780.clear(self)
+    for key,value in pairs(pattern) do
+        drv:_write8(pattern[key], lcd_hd44780.detect_e(self))
+    end
+
+    drv:command(0x00, lcd_hd44780.detect_e(self), true)
+    lcd_hd44780.clear(self)
 end
 
 return lcd_hd44780

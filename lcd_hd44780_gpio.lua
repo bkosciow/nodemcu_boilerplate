@@ -69,4 +69,8 @@ function drv:write(ch, enable)
     drv._write8(self, ch:byte(1), enable)        
 end
 
+function drv:setrs(high)
+    if (high) then gpio.write(self.pins['RS'], gpio.HIGH) else gpio.write(self.pins['RS'], gpio.LOW) end
+end
+
 return drv

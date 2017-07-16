@@ -255,4 +255,19 @@ Motion detector
         
 [Read more](sample/sound_detector.md)
         
+## Triled module
+
+Module to control triled or any other with common anode.
         
+        triled = require "triled"
+
+        triled.pin_red = 2
+        triled.pin_green = 1
+        triled.pin_blue = 8
+        triled.init()
+        
+        triled.red(true)
+        triled.blink_green(2)
+        triled.blink_blue(3, true)
+
+[Read more](sample/triled.md)

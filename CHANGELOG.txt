@@ -1,3 +1,5 @@
+0.17.0
+    - triled module
 0.16.1
     - add event to relay handler
 0.16.0

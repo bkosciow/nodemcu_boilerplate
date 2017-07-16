@@ -27,6 +27,8 @@ After getting connection we launch main.lua and start keep-alive-timer.
 I had few cases when net was gone and board didn't reconnect until rebooted. After few tries I ended with timer that checks connection and count failures in row. After reaching 10 or more it force unit reboot. Normally board would reconnect automatically before time is out.
 In my case it was ok to reboot the device but keep in mind that may not be in yours.
 
+If you want to use wifi-init with triled use file *wifi-init-triled.lua*. Remember to rename it.
+
 ## main
 This file is main app start file. In boilerplate we will just turn on buildin led.
 
@@ -269,5 +271,7 @@ Module to control triled or any other with common anode.
         triled.red(true)
         triled.blink_green(2)
         triled.blink_blue(3, true)
+
+If you want to use wifi-init with triled use file *wifi-init-triled.lua*. Remember to rename it.
 
 [Read more](sample/triled.md)

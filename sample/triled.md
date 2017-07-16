@@ -40,3 +40,7 @@ Blink two times, pause and resume sequence
 Clear timers, disable all leds:
     
     triled.clear()    
+
+## WiFi with triled
+
+If you want to use wifi-init with triled use file *wifi-init-triled.lua*. Remember to rename it.

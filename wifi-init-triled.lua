@@ -13,13 +13,11 @@ _wifi_keepalive_timer = tmr.create()
 _wifi_keepalive_timer:register(5000, tmr.ALARM_AUTO, function()
     if wifi.sta.status() ~= 5 then
         if _WIFI_FAIL_COUNTER == 0 then 
-            rc_timer:stop()
             triled.blink_red(BLINK_WIFI_FAILURE, true) 
         end
         _WIFI_FAIL_COUNTER = _WIFI_FAIL_COUNTER + 1       
     else
         if _WIFI_FAIL_COUNTER > 0 then
-            rc_timer:start()
             triled.clear()
         end            
         _WIFI_FAIL_COUNTER = 0

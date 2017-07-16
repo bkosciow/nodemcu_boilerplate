@@ -1,3 +1,4 @@
+BLINK_WIFI_FAILURE = 2 -- no of blibks durin wifi fail
 triled = require "triled"
 triled.pin_red = 2
 triled.pin_green = 1

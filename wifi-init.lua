@@ -10,9 +10,9 @@ _wifi_keepalive_timer:register(5000, tmr.ALARM_AUTO, function()
         _WIFI_FAIL_COUNTER = _WIFI_FAIL_COUNTER + 1
         print ("WiFi fail: "..wifi.sta.status())
     else
-        WIFI_FAIL_COUNTER = 0
+        _WIFI_FAIL_COUNTER = 0
     end
-    if WIFI_FAIL_COUNTER > 10 then        
+    if _WIFI_FAIL_COUNTER > 10 then        
         print "Node reboot..."
         node.restart()
     end       

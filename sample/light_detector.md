@@ -57,7 +57,7 @@ In ths example sensor is wired to pin G2, no callback given, inteval 6s
         light_sensor = require "light_detector"
         light_sensor_handler = require "light_detector_handle"
         
-        send_socket = net.createConnection(net.UDP, 0)
+        send_socket = net.createUDPSocket() 
         
         light = light_sensor(send_socket, 4, nil, 6000)
         light_handler = light_sensor_handler(light)

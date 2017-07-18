@@ -24,7 +24,7 @@ In ths example sensor is wired to pin G1. And callback is used to trigger G3
         
         sd = require "sound_detector"
 
-        send_socket = net.createConnection(net.UDP, 0)
+        send_socket = net.createUDPSocket() 
         
         gpio.mode(3, gpio.OUTPUT, gpio.PULLUP)
         gpio.write(3, gpio.HIGH)

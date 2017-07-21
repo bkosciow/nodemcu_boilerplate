@@ -1,7 +1,7 @@
 local listener = {}
 
 listener.handlers = {}
-listener.svr = net.createServer(net.UDP)
+listener.svr = net.createUDPSocket()
 
 listener.add = function(name, handler)
     listener.handlers[name] = handler   

@@ -59,7 +59,7 @@ Response:
     network_message = require "network_message"
     server_listener = require "server_listener" 
     
-    send_socket = net.createConnection(net.UDP, 0)
+    send_socket = net.createUDPSocket() 
     dht11 = require "dht11"
     dht11_handler = require "dht11_handler"
     

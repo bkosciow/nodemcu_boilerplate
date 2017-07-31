@@ -13,7 +13,7 @@ network_message.validateMessage = function(json)
 end
     
 network_message.decodeMessage = function(message)        
-    ok, json = pcall(cjson.decode, message)
+    ok, json = pcall(sjson.decode, message)
     if not ok or not network_message.validateMessage(json) then
         json = nil
     end
@@ -34,7 +34,7 @@ network_message.prepareMessage = function()
 end
 
 network_message.sendMessage = function(socket, message, port, ip)
-    ok, json = pcall(cjson.encode, message)    
+    ok, json = pcall(sjson.encode, message)    
     if ok then
         print(json)        
         if port == nil then port = PORT end

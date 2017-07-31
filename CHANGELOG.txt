@@ -1,3 +1,8 @@
+0.18.0
+    - upgrade to be compatible with Lua 5.1.4 on SDK 2.1.0(116b762)
+    - replace cjson with sjson
+    - replace net.createConnection(net.UDP, 0) with net.createUDPSocket() 
+    - update passing of wifi credential from attributes to object
 0.17.0
     - triled module
 0.16.1

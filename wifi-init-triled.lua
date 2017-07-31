@@ -1,24 +1,25 @@
-BLINK_WIFI_FAILURE = 2 -- no of blibks durin wifi fail
 triled = require "triled"
-triled.pin_red = 2
-triled.pin_green = 1
-triled.pin_blue = 8
+triled.pin_red = PIN_RED
+triled.pin_green = PIN_GREEN
+triled.pin_blue = PIN_BLUE
 triled.init()
 triled.blink_red(BLINK_WIFI_FAILURE, true)
 _WIFI_CURRENT_AP = 1
 _WIFI_FAIL_COUNTER = 0
 wifi.setmode(wifi.STATION)
-NET_AP,NET_PASSWORD =  next(_WIFI_APS[_WIFI_CURRENT_AP])
-wifi.sta.config(NET_AP, NET_PASSWORD)
+AP = _WIFI_APS[_WIFI_CURRENT_AP]
+wifi.sta.config(AP)
 _wifi_keepalive_timer = tmr.create()
 _wifi_keepalive_timer:register(5000, tmr.ALARM_AUTO, function()
     if wifi.sta.status() ~= 5 then
         if _WIFI_FAIL_COUNTER == 0 then 
+            rc_timer:stop()
             triled.blink_red(BLINK_WIFI_FAILURE, true) 
         end
         _WIFI_FAIL_COUNTER = _WIFI_FAIL_COUNTER + 1       
     else
         if _WIFI_FAIL_COUNTER > 0 then
+            rc_timer:start()
             triled.clear()
         end            
         _WIFI_FAIL_COUNTER = 0
@@ -35,9 +36,9 @@ if wifi.sta.getip() == nil then
     local _boot_wifi_timer = tmr.create()
     _boot_wifi_timer:alarm(2000, tmr.ALARM_AUTO, function()
         if _boot_wifi_counter == 0 then
-            NET_AP,NET_PASSWORD =  next(_WIFI_APS[_WIFI_CURRENT_AP])
-            wifi.sta.config(NET_AP, NET_PASSWORD)
-            print("Connecting to: "..NET_AP)
+            AP =  _WIFI_APS[_WIFI_CURRENT_AP]
+            wifi.sta.config(AP)
+            print("Connecting to: "..AP.ssid)
         end
         if wifi.sta.getip() == nil then     
             print(" Wait for IP --> "..wifi.sta.status()) 

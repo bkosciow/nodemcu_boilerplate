@@ -48,7 +48,7 @@ In ths example sensor is wired to pin G3
     pir = require "pir_hcs_sr501"
     pir_handler = require "pir_hcs_sr501_handler"
     
-    send_socket = net.createConnection(net.UDP, 0)
+    send_socket = net.createUDPSocket() 
     
     sensor = pir(send_socket, 2) -- 2 is a pin no
     handler = pir_handler(sensor)

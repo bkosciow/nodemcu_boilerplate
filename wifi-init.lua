@@ -1,8 +1,8 @@
 _WIFI_CURRENT_AP = 1
 _WIFI_FAIL_COUNTER = 0
 wifi.setmode(wifi.STATION)
-NET_AP,NET_PASSWORD =  next(_WIFI_APS[_WIFI_CURRENT_AP])
-wifi.sta.config(NET_AP, NET_PASSWORD)
+AP = _WIFI_APS[_WIFI_CURRENT_AP]
+wifi.sta.config(AP)
 
 _wifi_keepalive_timer = tmr.create()
 _wifi_keepalive_timer:register(5000, tmr.ALARM_AUTO, function()
@@ -23,9 +23,9 @@ if wifi.sta.getip() == nil then
     local _boot_wifi_timer = tmr.create()
     _boot_wifi_timer:alarm(2000, tmr.ALARM_AUTO, function()
         if _boot_wifi_counter == 0 then
-            NET_AP,NET_PASSWORD =  next(_WIFI_APS[_WIFI_CURRENT_AP])
-            wifi.sta.config(NET_AP, NET_PASSWORD)
-            print("Connecting to: "..NET_AP)
+            AP = _WIFI_APS[_WIFI_CURRENT_AP]
+            wifi.sta.config(AP)
+            print("Connecting to: "..AP.ssid)
         end
         if wifi.sta.getip() == nil then     
             print(" Wait for IP --> "..wifi.sta.status()) 

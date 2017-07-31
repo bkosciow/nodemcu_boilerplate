@@ -3,7 +3,7 @@ print ("core ready")
 network_message = require "network_message" 
 lock = false
 
-srv=net.createConnection(net.UDP, 0)
+srv=net.createUDPSocket()
 srv:connect(SERVER_PORT, wifi.sta.getbroadcast())
 
 function sendEvent(event)

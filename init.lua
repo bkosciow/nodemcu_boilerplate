@@ -1,6 +1,6 @@
 print ("Booting..")
-gpio.mode(1, gpio.INPUT, gpio.PULLUP)
-if gpio.read(1) == 0 then
+gpio.mode(0, gpio.INPUT, gpio.PULLUP)
+if gpio.read(0) == 0 then
     print("..aborted")
 else    
     if file.exists('parameters.lc') then  

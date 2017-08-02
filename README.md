@@ -275,3 +275,23 @@ Module to control triled or any other with common anode.
 If you want to use wifi-init with triled use file *wifi-init-triled.lua*. Remember to rename it.
 
 [Read more](sample/triled.md)
+
+## RFID - RC522 module and handler
+
+        rc522_handler = require "rc522_handler"
+        rc522 = require "rc522"
+        handler = rc522_handler(function(event, params)   
+            if last ~= nil and params.id == last then
+                print(params.id)
+                print(params.response)
+                last = ""
+            end
+        end) 
+        rc522.pin_ss = RC522_PIN_SS
+        rc522.pin_rst = RC522_PIN_RST
+        rc522.init(function(cardid) 
+            print("Tag Found: "..cardid)
+        end) 
+
+[Read more](sample/rc522.md)
+

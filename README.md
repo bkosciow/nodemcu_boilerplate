@@ -281,10 +281,10 @@ If you want to use wifi-init with triled use file *wifi-init-triled.lua*. Rememb
         rc522_handler = require "rc522_handler"
         rc522 = require "rc522"
         handler = rc522_handler(function(event, params)   
-            if last ~= nil and params.id == last then
+            if rc522.last ~= nil and params.id == rc522.last then
                 print(params.id)
                 print(params.response)
-                last = ""
+                rc522.last = ""
             end
         end) 
         rc522.pin_ss = RC522_PIN_SS

@@ -12,6 +12,7 @@ RC522.num_write = 0
 RC522.pin_ss = nil
 RC522.pin_rst = nil
 RC522.rc_timer = tmr.create()
+RC522.last = ''
 function RC522.dev_write(address, value)
     gpio.write(RC522.pin_ss, gpio.LOW)
     RC522.num_write = spi.send(1, bit.band(bit.lshift(address,1), 0x7E), value)
@@ -20,7 +21,7 @@ end
 function RC522.appendHex(t)
   strT = ""
   for i,v in ipairs(t) do
-    strT = strT.." "..string.format("%X", t[i])
+    strT = strT..string.format("%X", t[i])
   end
   return strT
 end
@@ -194,13 +195,13 @@ function RC522.init(callback)
             RC522.rc_timer:stop()
             err, serialNo = RC522.anticoll()
             serialNo = RC522.appendHex(serialNo)
-            if last == "" and serialNo:len() > 9 then
+            if RC522.last == "" and serialNo:len() > 9 then
                 message = network_message.prepareMessage() 
                 message.event = 'rc522.read'
                 message.parameters = {['id'] = serialNo}
                 network_message.sendMessage(send_socket, message)
-                last = serialNo
-                if callback ~= nil then callback(serialNo) end
+                RC522.last = serialNo
+                if callback ~= nil then callback(serialNo) else RC522.last="" end
             end 
             buf = {}
             buf[1] = 0x50 

@@ -23,20 +23,23 @@ end
 
 function relay_handler:handle(socket, message)   
     response = false
-    if message ~= nil and message.event ~= nil and type(message['parameters']) == 'table' and message.parameters.channel ~= nil then
-        channel = self.channels[message.parameters.channel + 1]
-        if message.event == 'channel.on' and channel ~= nil then
-            gpio.write(channel, gpio.LOW)
-            response = true
-            if self.callback ~= nil then
-                self.callback('channel.on', channel) 
+    if message ~= nil and message.event ~= nil then
+    
+        if type(message['parameters']) == 'table' and message.parameters.channel ~= nil then
+            channel = self.channels[message.parameters.channel + 1]
+            if message.event == 'channel.on' and channel ~= nil then
+                gpio.write(channel, gpio.LOW)
+                response = true
+                if self.callback ~= nil then
+                    self.callback('channel.on', channel) 
+                end
             end
-        end
-        if message.event == 'channel.off' and channel ~= nil then
-            gpio.write(channel, gpio.HIGH)
-            response = true
-            if self.callback ~= nil then
-                self.callback('channel.off', channel) 
+            if message.event == 'channel.off' and channel ~= nil then
+                gpio.write(channel, gpio.HIGH)
+                response = true
+                if self.callback ~= nil then
+                    self.callback('channel.off', channel) 
+                end
             end
         end
         if message.event == 'channel.states' then
@@ -46,6 +49,7 @@ function relay_handler:handle(socket, message)
                 states[k] = gpio.read(v) == 0 and 1 or 0
             end    
             message.response = states
+            message.event = "channels.response"
             network_message.sendMessage(socket, message)
             if self.callback ~= nil then
                 self.callback('channel.states', states) 

@@ -6,9 +6,11 @@ network_message = require "network_message"
 gpio_driver = require "lcd_hd44780_gpio"
 hd44780 = require("lcd_hd44780")
 --server_listener = require "server_listener"
+--message_crypt_base64 = require "message_crypt_base64"
 --hd44780_handler = require "lcd_hd44780_handler"
 
-
+--network_message.encryptor = message_crypt_base64
+--network_message.addDecryptor(message_crypt_base64)
 --setup LCD
 --pins = {
 --    RS= 4,

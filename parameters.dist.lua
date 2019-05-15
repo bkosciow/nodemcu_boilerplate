@@ -3,6 +3,7 @@ _WIFI_APS = {
     {["ssid"]="bubus1", ["pwd"]="whoknowsme1"}
 }
 PROTOCOL = "iot:1"
+PROTOCOL_ALLOW_UNENCRYPTED  = true
 PORT = 5053
 CHANNELS = {2, 3, 4, 1}
 

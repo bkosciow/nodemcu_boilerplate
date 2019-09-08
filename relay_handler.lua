@@ -7,10 +7,11 @@ setmetatable(relay_handler, {
     end,
 })
 
-function relay_handler.new(channels, callback)
+function relay_handler.new(channels, broadcast_changes, callback)
     local self = setmetatable({}, relay_handler)
     self.channels = channels
     self.callback = callback
+    self.broadcast_changes = broadcast_changes
     relay_handler.init(self)
     return self
 end    
@@ -30,6 +31,9 @@ function relay_handler:handle(socket, message)
             if message.event == 'channel.on' and channel ~= nil then
                 gpio.write(channel, gpio.LOW)
                 response = true
+                if (self.broadcast_changes ~= nil) then
+                    relay_handler.send_response(self, socket)
+                end
                 if self.callback ~= nil then
                     self.callback('channel.on', channel) 
                 end
@@ -37,20 +41,17 @@ function relay_handler:handle(socket, message)
             if message.event == 'channel.off' and channel ~= nil then
                 gpio.write(channel, gpio.HIGH)
                 response = true
+                if (self.broadcast_changes ~= nil) then
+                    relay_handler.send_response(self, socket)
+                end
                 if self.callback ~= nil then
                     self.callback('channel.off', channel) 
                 end
             end
         end
+                
         if message.event == 'channel.states' then
-            message = network_message.prepareMessage()
-            states = {}
-            for k,v in pairs(self.channels) do
-                states[k] = gpio.read(v) == 0 and 1 or 0
-            end    
-            message.response = states
-            message.event = "channels.response"
-            network_message.sendMessage(socket, message)
+            relay_handler.init(self, socket)
             if self.callback ~= nil then
                 self.callback('channel.states', states) 
             end
@@ -58,5 +59,17 @@ function relay_handler:handle(socket, message)
         end
     end           
 end
-    
+
+function relay_handler:send_response(socket)
+
+    message = network_message.prepareMessage()
+    states = {}
+    for k,v in pairs(self.channels) do
+        states[k] = gpio.read(v) == 0 and 1 or 0
+    end    
+    message.response = states
+    message.event = "channels.response"
+    network_message.sendMessage(socket, message)
+end    
+
 return relay_handler  

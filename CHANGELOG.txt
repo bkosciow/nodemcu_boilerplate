@@ -1,3 +1,5 @@
+0.20.0
+	- add AES cryptor
 0.19.1
     - update RC522, sample with direct REST call
 0.19.0

@@ -61,6 +61,8 @@ Module functions:
 
 - sendMessage(socket, message) - message is a table, function convert it to json string and send to socket
 
+[Read more](sample/message.md)
+
 ## Event listener (runs handlers)
 Module to handle events. It start its own UDP server, receive packet. Next it transform it into message and
 pass to registered handlers. Each handler reacts on supported events by executing some actions on its worker. 

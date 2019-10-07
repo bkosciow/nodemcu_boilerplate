@@ -1,5 +1,7 @@
+0.21.0
+    - releay_handler upgrade, function toggle
 0.20.0
-	- add AES cryptor
+    - add AES cryptor
 0.19.1
     - update RC522, sample with direct REST call
 0.19.0

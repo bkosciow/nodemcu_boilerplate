@@ -60,13 +60,33 @@ function relay_handler:handle(socket, message)
     end           
 end
 
-function relay_handler:send_response(socket)
+function relay_handler:toggle(socket, channel)
+    states = relay_handler.get_states(self)
+    if states[channel] == 1 then
+        gpio.write(channel, gpio.HIGH)
+    else
+        gpio.write(channel, gpio.LOW)
+    end
+    if (self.broadcast_changes ~= nil) then
+        relay_handler.send_response(self, socket)
+    end
+    
+end
 
-    message = network_message.prepareMessage()
+function relay_handler:get_states()
     states = {}
     for k,v in pairs(self.channels) do
         states[k] = gpio.read(v) == 0 and 1 or 0
-    end    
+    end 
+
+    return states
+end
+
+function relay_handler:send_response(socket)
+
+    message = network_message.prepareMessage()
+    states = relay_handler.get_states(self)
+        
     message.response = states
     message.event = "channels.response"
     network_message.sendMessage(socket, message)
